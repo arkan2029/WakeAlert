@@ -6,6 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5F225A402F1E0FFF00C83476 /* SleepStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A372F1E0FFF00C83476 /* SleepStage.swift */; };
+		5F225A412F1E0FFF00C83476 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A332F1E0FFF00C83476 /* HealthKitManager.swift */; };
+		5F225A422F1E0FFF00C83476 /* AddAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A392F1E0FFF00C83476 /* AddAlarmView.swift */; };
+		5F225A432F1E0FFF00C83476 /* AlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A3D2F1E0FFF00C83476 /* AlarmApp.swift */; };
+		5F225A442F1E0FFF00C83476 /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A322F1E0FFF00C83476 /* AlarmManager.swift */; };
+		5F225A452F1E0FFF00C83476 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A3B2F1E0FFF00C83476 /* PermissionsView.swift */; };
+		5F225A462F1E0FFF00C83476 /* SleepAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A342F1E0FFF00C83476 /* SleepAnalyzer.swift */; };
+		5F225A472F1E0FFF00C83476 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A362F1E0FFF00C83476 /* Alarm.swift */; };
+		5F225A482F1E0FFF00C83476 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F225A3A2F1E0FFF00C83476 /* ContentView.swift */; };
+		5F225A492F1E100000C83476 /* settings.local.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F225A302F1E0FFF00C83476 /* settings.local.json */; };
+		5F225A4A2F1E100000C83476 /* Info.plist.template in Resources */ = {isa = PBXBuildFile; fileRef = 5F225A3E2F1E0FFF00C83476 /* Info.plist.template */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5F225A142F1E0F6700C83476 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,14 +41,21 @@
 		5F225A032F1E0F6400C83476 /* WakeAlert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WakeAlert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F225A132F1E0F6700C83476 /* WakeAlertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WakeAlertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F225A1D2F1E0F6700C83476 /* WakeAlertUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WakeAlertUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F225A302F1E0FFF00C83476 /* settings.local.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = settings.local.json; sourceTree = "<group>"; };
+		5F225A322F1E0FFF00C83476 /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
+		5F225A332F1E0FFF00C83476 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		5F225A342F1E0FFF00C83476 /* SleepAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepAnalyzer.swift; sourceTree = "<group>"; };
+		5F225A362F1E0FFF00C83476 /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
+		5F225A372F1E0FFF00C83476 /* SleepStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepStage.swift; sourceTree = "<group>"; };
+		5F225A392F1E0FFF00C83476 /* AddAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlarmView.swift; sourceTree = "<group>"; };
+		5F225A3A2F1E0FFF00C83476 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5F225A3B2F1E0FFF00C83476 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
+		5F225A3D2F1E0FFF00C83476 /* AlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmApp.swift; sourceTree = "<group>"; };
+		5F225A3E2F1E0FFF00C83476 /* Info.plist.template */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Info.plist.template; sourceTree = "<group>"; };
+		5F225A4B2F1E107100C83476 /* WakeAlert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WakeAlert.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5F225A052F1E0F6400C83476 /* WakeAlert */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = WakeAlert;
-			sourceTree = "<group>";
-		};
 		5F225A162F1E0F6700C83476 /* WakeAlertTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WakeAlertTests;
@@ -75,10 +96,16 @@
 		5F2259FA2F1E0F6400C83476 = {
 			isa = PBXGroup;
 			children = (
-				5F225A052F1E0F6400C83476 /* WakeAlert */,
+				5F225A4B2F1E107100C83476 /* WakeAlert.entitlements */,
 				5F225A162F1E0F6700C83476 /* WakeAlertTests */,
 				5F225A202F1E0F6700C83476 /* WakeAlertUITests */,
 				5F225A042F1E0F6400C83476 /* Products */,
+				5F225A312F1E0FFF00C83476 /* .claude */,
+				5F225A352F1E0FFF00C83476 /* Managers */,
+				5F225A382F1E0FFF00C83476 /* Models */,
+				5F225A3C2F1E0FFF00C83476 /* Views */,
+				5F225A3D2F1E0FFF00C83476 /* AlarmApp.swift */,
+				5F225A3E2F1E0FFF00C83476 /* Info.plist.template */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +117,43 @@
 				5F225A1D2F1E0F6700C83476 /* WakeAlertUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5F225A312F1E0FFF00C83476 /* .claude */ = {
+			isa = PBXGroup;
+			children = (
+				5F225A302F1E0FFF00C83476 /* settings.local.json */,
+			);
+			path = .claude;
+			sourceTree = "<group>";
+		};
+		5F225A352F1E0FFF00C83476 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				5F225A322F1E0FFF00C83476 /* AlarmManager.swift */,
+				5F225A332F1E0FFF00C83476 /* HealthKitManager.swift */,
+				5F225A342F1E0FFF00C83476 /* SleepAnalyzer.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		5F225A382F1E0FFF00C83476 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5F225A362F1E0FFF00C83476 /* Alarm.swift */,
+				5F225A372F1E0FFF00C83476 /* SleepStage.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5F225A3C2F1E0FFF00C83476 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5F225A392F1E0FFF00C83476 /* AddAlarmView.swift */,
+				5F225A3A2F1E0FFF00C83476 /* ContentView.swift */,
+				5F225A3B2F1E0FFF00C83476 /* PermissionsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -106,9 +170,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				5F225A052F1E0F6400C83476 /* WakeAlert */,
 			);
 			name = WakeAlert;
 			packageProductDependencies = (
@@ -212,6 +273,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F225A492F1E100000C83476 /* settings.local.json in Resources */,
+				5F225A4A2F1E100000C83476 /* Info.plist.template in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +299,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F225A402F1E0FFF00C83476 /* SleepStage.swift in Sources */,
+				5F225A412F1E0FFF00C83476 /* HealthKitManager.swift in Sources */,
+				5F225A422F1E0FFF00C83476 /* AddAlarmView.swift in Sources */,
+				5F225A432F1E0FFF00C83476 /* AlarmApp.swift in Sources */,
+				5F225A442F1E0FFF00C83476 /* AlarmManager.swift in Sources */,
+				5F225A452F1E0FFF00C83476 /* PermissionsView.swift in Sources */,
+				5F225A462F1E0FFF00C83476 /* SleepAnalyzer.swift in Sources */,
+				5F225A472F1E0FFF00C83476 /* Alarm.swift in Sources */,
+				5F225A482F1E0FFF00C83476 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,11 +465,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WakeAlert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WakeAlert/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your sleep data to wake you during optimal sleep stages.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app does not write health data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -421,11 +496,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = WakeAlert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"WakeAlert/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your sleep data to wake you during optimal sleep stages.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app does not write health data.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
