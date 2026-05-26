@@ -2,52 +2,61 @@
 
 Performance Metrics on sample data using MLClassifier from CreateML framework:
 
-DecisionTreeClassifier
+BoostedTreeClassifier
 
 Parameters
 Max Depth: 6
+Max Iterations: 10
 Min Loss Reduction: 0.0
 Min Child Weight: 0.0
 Random Seed: 42
+Step Size: 0.3
+Row Subsample: 1.0
+Column Subsample: 1.0
 
 Performance on Training Data
 ----------------------------------
-Number of examples: 1862
+Number of examples: 598983
 Number of classes: 3
-Accuracy: 90.66%
+Accuracy: 60.67%
 
 ******CONFUSION MATRIX******
 ----------------------------------
-True\Pred Core Deep REM  
-Core      657  24   26   
-Deep      36   620  14   
-REM       54   20   411  
+True\Pred Core   Deep   REM    
+Core      194456 6771   96725  
+Deep      70746  7095   28713  
+REM       32601  0      161876 
 
 ******PRECISION RECALL******
 ----------------------------------
 Clas Precision(%) Recall(%)
-Core 87.95           92.93          
-Deep 93.37           92.54          
-REM  91.13           84.74          
+Core 65.30           65.26          
+Deep 51.17           6.66           
+REM  56.34           83.24          
 
 
 Performance on Validation Data
 ----------------------------------
-Number of examples: 206
+Number of examples: 66553
 Number of classes: 3
-Accuracy: 89.81%
+Accuracy: 60.70%
 
 ******CONFUSION MATRIX******
 ----------------------------------
-True\Pred Core Deep REM  
-Core      66   3    2    
-Deep      6    76   3    
-REM       5    2    43   
+True\Pred Core  Deep  REM   
+Core      21618 749   10739 
+Deep      7857  781   3191  
+REM       3620  0     17998 
 
 ******PRECISION RECALL******
 ----------------------------------
 Clas Precision(%) Recall(%)
-Core 85.71           92.96          
-Deep 93.83           89.41          
-REM  89.58           86.00          
+Core 65.32           65.30          
+Deep 51.05           6.60           
+REM  56.37           83.25            
+
+EVALUATION METRICS:
+Number of examples: 166385
+Number of classes: 3
+Accuracy: 60.68%
 
