@@ -11,6 +11,7 @@ class AlarmManager: ObservableObject {
 
     private let healthKitManager = HealthKitManager.shared
     private let sleepAnalyzer = SleepAnalyzer.shared
+    private let mlPredictor = MLSleepPredictor.shared
     private let notificationCenter = UNUserNotificationCenter.current()
 
     // Background task identifier
@@ -105,8 +106,53 @@ class AlarmManager: ObservableObject {
             // We have enough historical data, schedule adaptive monitoring
             try await scheduleAdaptiveMonitoring(for: alarm, pattern: pattern)
         } else {
-            // Not enough data, fall back to regular alarm
-            print("Not enough sleep data for alarm \(alarm.label), using regular alarm")
+            // Not enough historical data - try ML model fallback
+            print("Insufficient sleep data (\(recentNights.count) nights) for pattern-based prediction")
+            print("Using ML model as fallback")
+            try await scheduleMLBasedAlarm(alarm)
+        }
+    }
+
+    private func scheduleMLBasedAlarm(_ alarm: Alarm) async throws {
+        guard let nextOccurrence = alarm.nextOccurrence() else { return }
+
+        // Estimate bedtime (default to 8 hours before alarm)
+        let estimatedBedtime = nextOccurrence.addingTimeInterval(-8 * 60 * 60)
+
+        // Use ML model to suggest optimal wake times
+        let suggestions = mlPredictor.suggestWakeTimes(
+            around: nextOccurrence,
+            bedtime: estimatedBedtime,
+            windowMinutes: alarm.maxAdjustmentMinutes
+        )
+
+        if let bestSuggestion = suggestions.first, bestSuggestion.confidence > 0.5 {
+            // Found a good ML prediction
+            print("   ML Prediction: Wake at \(bestSuggestion.time)")
+            print("   Predicted stage: \(bestSuggestion.stage.rawValue)")
+            print("   Confidence: \(String(format: "%.1f%%", bestSuggestion.confidence * 100))")
+
+            // Schedule notification for ML-suggested time
+            let content = UNMutableNotificationContent()
+            content.title = alarm.label.isEmpty ? "Alarm" : alarm.label
+            content.body = "Smart wake time (ML-powered)"
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(alarm.soundName).caf"))
+            content.categoryIdentifier = "ALARM_CATEGORY"
+
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: bestSuggestion.time)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: !alarm.repeatDays.isEmpty)
+
+            let request = UNNotificationRequest(
+                identifier: alarm.id.uuidString,
+                content: content,
+                trigger: trigger
+            )
+
+            try await notificationCenter.add(request)
+        } else {
+            // ML model not confident - fall back to regular alarm
+            print("   ML model confidence too low, using standard alarm time")
             scheduleRegularAlarm(alarm)
         }
     }
@@ -125,7 +171,7 @@ class AlarmManager: ObservableObject {
             currentSleepData: currentSleepEstimate
         )
 
-        print("📊 Adaptive Monitoring for '\(alarm.label)':")
+        print("Adaptive Monitoring for '\(alarm.label)':")
         print("   Risk Level: \(recommendation.riskLevel.rawValue)")
         print("   Monitoring Window: \(recommendation.startMinutesBeforeAlarm) minutes before alarm")
         print("   Check Interval: Every \(recommendation.checkIntervalMinutes) minutes")
@@ -239,7 +285,7 @@ class AlarmManager: ObservableObject {
                 currentSleepData: currentSleepData
             )
 
-            print("🔍 Active monitoring started:")
+            print("Active monitoring started:")
             print("   Check interval: \(recommendation.checkIntervalMinutes) minutes")
             print("   Risk level: \(recommendation.riskLevel.rawValue)")
 
@@ -269,7 +315,7 @@ class AlarmManager: ObservableObject {
 
                 // If we found a good time and it's now or in the past, trigger alarm
                 if optimalTime <= Date() {
-                    print("✅ Optimal wake time reached!")
+                    print("Optimal wake time reached!")
                     await triggerAlarm(alarm, at: optimalTime)
                     isMonitoringActive = false
                     return
@@ -280,11 +326,11 @@ class AlarmManager: ObservableObject {
             }
 
             // Monitoring period ended, use the optimal time we found
-            print("⏰ Monitoring window ended, triggering alarm")
+            print("Monitoring window ended, triggering alarm")
             await triggerAlarm(alarm, at: optimalTime)
 
         } catch {
-            print("❌ Error during monitoring: \(error)")
+            print("Error during monitoring: \(error)")
             // Fall back to original time
             await triggerAlarm(alarm, at: nextOccurrence)
         }

@@ -1,26 +1,24 @@
 import Foundation
 import HealthKit
 
-// Sleep stages as classified by Apple Watch
 enum SleepStage: String, Codable {
     case awake = "Awake"
-    case core = "Core"      // N1/N2 - Light sleep (IDEAL for waking)
-    case deep = "Deep"      // N3 - Deep sleep (AVOID)
-    case rem = "REM"        // REM sleep (OK for waking)
+    case core = "Core"
+    case deep = "Deep"
+    case rem = "REM"
     case unknown = "Unknown"
 
-    // Priority for waking up (lower is better)
+    // Lower = better time to wake up
     var wakePriority: Int {
         switch self {
-        case .core: return 1    // Best
-        case .rem: return 2     // Good
-        case .awake: return 3   // OK
-        case .deep: return 4    // Worst
+        case .awake: return 1
+        case .core: return 2
+        case .rem: return 3
+        case .deep: return 4
         case .unknown: return 5
         }
     }
 
-    // Convert from HKCategoryValueSleepAnalysis
     static func from(hkValue: HKCategoryValueSleepAnalysis) -> SleepStage {
         switch hkValue {
         case .asleepCore:
@@ -37,7 +35,6 @@ enum SleepStage: String, Codable {
     }
 }
 
-// Represents a sleep stage period
 struct SleepPeriod: Identifiable, Codable {
     let id: UUID
     let stage: SleepStage
@@ -56,10 +53,9 @@ struct SleepPeriod: Identifiable, Codable {
     }
 }
 
-// A full night's sleep data
 struct SleepNight: Identifiable, Codable {
     let id: UUID
-    let date: Date // Date of the night (bedtime date)
+    let date: Date
     let periods: [SleepPeriod]
 
     var totalSleepTime: TimeInterval {

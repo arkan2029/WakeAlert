@@ -5,12 +5,11 @@ class SleepAnalyzer {
 
     private init() {}
 
-    // Analyze historical sleep patterns to predict sleep stages
+    /// Analyzes historical sleep data to extract personalized sleep patterns
+    /// - Parameter nights: Array of sleep nights to analyze (minimum 3 required)
+    /// - Returns: SleepPattern if sufficient data exists, nil otherwise
     func analyzeHistoricalPatterns(nights: [SleepNight]) -> SleepPattern? {
-        guard nights.count >= 3 else {
-            // Not enough data for reliable analysis
-            return nil
-        }
+        guard nights.count >= 3 else { return nil }
 
         var cycleDurations: [TimeInterval] = []
         var bedtimes: [Date] = []
@@ -23,21 +22,17 @@ class SleepAnalyzer {
             }
             totalSleepTimes.append(night.totalSleepTime)
 
-            // Analyze cycle patterns
             let cycles = detectSleepCycles(in: night.periods)
             cycleDurations.append(contentsOf: cycles)
 
-            // Analyze stage distributions within cycles
             let distributions = analyzeCycleStageDistributions(in: night.periods)
             stageDistributions.append(contentsOf: distributions)
         }
 
-        // Calculate averages
         let avgBedtime = averageTimeOfDay(from: bedtimes)
         let avgSleepDuration = totalSleepTimes.reduce(0, +) / Double(totalSleepTimes.count)
         let avgCycleDuration = cycleDurations.isEmpty ? 90 * 60 : cycleDurations.reduce(0, +) / Double(cycleDurations.count)
 
-        // Learn the user's personal stage distribution pattern
         let avgStageDistribution = averageStageDistribution(from: stageDistributions)
 
         return SleepPattern(
@@ -49,7 +44,7 @@ class SleepAnalyzer {
         )
     }
 
-    // Analyze how sleep stages are distributed within each cycle
+    /// Analyzes sleep stage distribution patterns within detected cycles
     private func analyzeCycleStageDistributions(in periods: [SleepPeriod]) -> [CycleStageDistribution] {
         var distributions: [CycleStageDistribution] = []
         var cycleStart: Date?
@@ -404,43 +399,85 @@ class SleepAnalyzer {
         let deepPercentage = Double(deepSleepSamples) / Double(totalSamples)
         return deepPercentage > 0.4
     }
+
+    /// Exports sleep data to CSV format for ML model training
+    /// - Parameter nights: Sleep nights to export
+    /// - Returns: CSV string with time-based features and sleep stage labels
+    func exportTrainingData(nights: [SleepNight]) -> String {
+        var csv: [String] = []
+        csv.append("hour,minute,day_of_week,minutes_since_bedtime,days_of_sleep_data,actual_stage")
+        for night in nights {
+            guard let bedtime = night.bedtime else { continue }
+            let samplingInterval: TimeInterval = 5 * 60
+            var currentTime = bedtime
+            let endTime = night.wakeTime ?? bedtime.addingTimeInterval(12 * 60 * 60)
+            while currentTime <= endTime {
+                guard let currentPeriod = night.periods.first(where: { period in period.startDate <= currentTime && period.endDate >= currentTime
+                }) else {
+                    currentTime = currentTime.addingTimeInterval(samplingInterval)
+                    continue
+                }
+                if currentPeriod.stage == .awake || currentPeriod.stage == .unknown {
+                    currentTime = currentTime.addingTimeInterval(samplingInterval)
+                    continue
+                }
+                let calendar = Calendar.current
+                let hour = calendar.component(.hour, from: currentTime)
+                let minute = calendar.component(.minute, from: currentTime)
+                let weekday = calendar.component(.weekday, from: currentTime)
+                let minutesSinceBedtime = Int(currentTime.timeIntervalSince(bedtime) / 60.0)
+                let daysOfData = nights.count
+                let row = "\(hour),\(minute),\(weekday),\(minutesSinceBedtime),\(daysOfData),\(currentPeriod.stage.rawValue)"
+                csv.append(row)
+                currentTime = currentTime.addingTimeInterval(samplingInterval)
+            }
+        }
+        return csv.joined(separator: "\n")
+    }
+
+    func saveTrainingDataToFile(nights: [SleepNight]) -> URL? {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        let fileURL = documentsDirectory.appendingPathComponent("sleep_training_data.csv")
+        let csvString = exportTrainingData(nights: nights)
+        do {
+            try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
+            print("Trainding data saved to: \(fileURL.path)")
+            return fileURL
+        } catch {
+            print("Error saving training data: \(error)")
+            return nil
+        }
+    }
 }
 
-// Represents how sleep stages are distributed throughout a cycle
+/// Distribution of sleep stages across a single sleep cycle
 struct CycleStageDistribution {
-    // 10 buckets representing 0-10%, 10-20%, ..., 90-100% of cycle
+    /// 10 buckets representing deciles of the sleep cycle (0-10%, 10-20%, etc.)
     let buckets: [SleepStage?]
 
-    // Default generic pattern (only used as last resort fallback)
+    /// Default sleep stage distribution based on typical sleep architecture
     static var `default`: CycleStageDistribution {
-        // Generic pattern: Core, Core, Core, Deep, Deep, Core, Core, REM, REM, REM
         CycleStageDistribution(buckets: [
-            .core,  // 0-10%
-            .core,  // 10-20%
-            .core,  // 20-30%
-            .deep,  // 30-40%
-            .deep,  // 40-50%
-            .core,  // 50-60%
-            .core,  // 60-70%
-            .rem,   // 70-80%
-            .rem,   // 80-90%
-            .rem    // 90-100%
+            .core, .core, .core, .deep, .deep,
+            .core, .core, .rem, .rem, .rem
         ])
     }
 
-    // Get default stage for a bucket (fallback only)
+    /// Returns the default stage for a given bucket index (fallback for missing data)
     func defaultStageForBucket(_ index: Int) -> SleepStage? {
         guard index >= 0 && index < 10 else { return nil }
         return CycleStageDistribution.default.buckets[index]
     }
 }
 
-// Represents patterns learned from historical sleep data
+/// Personalized sleep pattern derived from historical data
 struct SleepPattern {
     let averageBedtime: Date
     let averageSleepDuration: TimeInterval
-    let averageCycleDuration: TimeInterval // Usually ~90 minutes, but learned from user's data
-    let stageDistribution: CycleStageDistribution // User's personal sleep stage pattern
+    let averageCycleDuration: TimeInterval
+    let stageDistribution: CycleStageDistribution
     let nightsAnalyzed: Int
 
     var hasEnoughData: Bool {
@@ -448,38 +485,35 @@ struct SleepPattern {
     }
 }
 
-// Real-time analysis of current sleep
+/// Real-time sleep analysis snapshot
 struct RealtimeSleepAnalysis {
     let currentStage: SleepStage
-    let cyclePosition: Double // 0.0 to 1.0, where in the cycle we are
-    let confidence: Double // 0.0 to 1.0, how confident we are
+    let cyclePosition: Double
+    let confidence: Double
 }
 
-// Adaptive monitoring recommendation based on predicted sleep patterns
+/// Adaptive monitoring strategy based on predicted sleep patterns
 struct MonitoringRecommendation {
-    let startMinutesBeforeAlarm: Int // How many minutes before alarm to start monitoring
-    let checkIntervalMinutes: Int    // How often to check sleep stage (in minutes)
-    let reason: String                // Human-readable explanation
-    let riskLevel: RiskLevel          // Risk of waking in Deep sleep
+    let startMinutesBeforeAlarm: Int
+    let checkIntervalMinutes: Int
+    let reason: String
+    let riskLevel: RiskLevel
 
     enum RiskLevel: String {
-        case minimal = "Minimal"  // Core/REM predicted, 30 min monitoring
-        case low = "Low"          // Little Deep sleep, 45 min monitoring
-        case medium = "Medium"    // Some Deep sleep, 60 min monitoring
-        case high = "High"        // Lots of Deep sleep, 90 min monitoring
+        case minimal = "Minimal"
+        case low = "Low"
+        case medium = "Medium"
+        case high = "High"
     }
 
-    // Total monitoring duration
     var totalMonitoringDuration: TimeInterval {
         TimeInterval(startMinutesBeforeAlarm * 60)
     }
 
-    // Number of checks during monitoring
     var estimatedChecks: Int {
         startMinutesBeforeAlarm / checkIntervalMinutes
     }
 
-    // Battery impact estimate
     var batteryImpact: String {
         switch riskLevel {
         case .minimal: return "Very Low"

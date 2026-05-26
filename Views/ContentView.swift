@@ -4,7 +4,9 @@ struct ContentView: View {
     @StateObject private var alarmManager = AlarmManager.shared
     @StateObject private var healthKitManager = HealthKitManager.shared
     @State private var showingAddAlarm = false
+    @State private var showingAddSmartAlarm = false
     @State private var showingPermissions = false
+    @State private var showSmartWakeInfo = false
 
     var body: some View {
         NavigationView {
@@ -58,6 +60,15 @@ struct ContentView: View {
                     }
                 }
 
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showSmartWakeInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.blue)
+                    }
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingAddAlarm = true
@@ -65,21 +76,36 @@ struct ContentView: View {
                         Image(systemName: "plus")
                     }
                 }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingAddSmartAlarm = true
+                    } label: {
+                        Image(systemName: "brain.head.profile")
+                            .foregroundColor(.purple)
+                    }
+                }
             }
             .sheet(isPresented: $showingAddAlarm) {
-                AddAlarmView()
+                AddAlarmView(isSmartAlarm: false)
+            }
+            .sheet(isPresented: $showingAddSmartAlarm) {
+                AddAlarmView(isSmartAlarm: true)
             }
             .sheet(isPresented: $showingPermissions) {
                 PermissionsView()
             }
             .onAppear {
-                // Setup notification actions
                 alarmManager.setupNotificationActions()
 
-                // Check if we need to request permissions
                 if !healthKitManager.isAuthorized {
                     showingPermissions = true
                 }
+            }
+            .alert("Smart Wake", isPresented: $showSmartWakeInfo) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Smart Wake uses AI to wake you during lighter sleep stages (Core or REM) for a more refreshing morning.\n\n🧠 How it works:\n• Analyzes your Apple Watch sleep data\n• Learns your personal sleep patterns (after 3+ nights)\n• Uses ML predictions as a fallback\n• Adjusts wake time within your specified window\n\nTap the brain icon (🧠) to create a Smart Wake alarm!")
             }
         }
     }
